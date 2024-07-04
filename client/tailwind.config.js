@@ -16,7 +16,6 @@ export default {
         body: "#6C757D",
         yellow: "#FFD333",
         yellowDark: "#ffc800",
-        blue: "#3D464D",
         border: "#dee2e6",
         borderYellow: "#ffefb3",
         skeleton: "bg-slate-200"

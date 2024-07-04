@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { createTender } from "../../api/tenderService";
+import { useAlert } from "react-alert";
 
 const CreateTender = ({ tenders, setTenders, addTender }) => {
+  const alert = useAlert();
   const [tenderData, setTenderData] = useState({
     name: "",
     description: "",
@@ -18,9 +20,11 @@ const CreateTender = ({ tenders, setTenders, addTender }) => {
     e.preventDefault();
     try {
       const newTender = await createTender(tenderData);
+      alert.success("Tender Created Successfully")
       setTenders([...tenders, newTender]);
     } catch (error) {
       console.error("Error creating tender", error.message);
+      alert.error("Error creating tender", error.message)
     }
   };
 

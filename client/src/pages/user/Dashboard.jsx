@@ -1,14 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   getTenders,
   createBid,
   getBidsByTenderId,
+  getAvailableTenders,
 } from "../../api/tenderService";
 import { formateDate } from "../../functions/formatDate";
 import Modal from "../../components/Modal";
 import NewBid from "../../components/NewBid";
+import { AuthContext } from "../../api/authContext";
+import { useNavigate } from "react-router-dom";
 
 const UserDashboard = () => {
+  const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
   const [showBidModel, setShowBidModel] = useState(false);
   const [tenders, setTenders] = useState([]);
   const [selectedTender, setSelectedTender] = useState(null);
@@ -25,8 +30,12 @@ const UserDashboard = () => {
   };
 
   const fetchBids = async () => {
-    const bids = await getBidsByTenderId(selectedTender._id);
-    setBids(bids);
+    if (user) {
+      const bids = await getBidsByTenderId(selectedTender._id);
+      setBids(bids);
+    } else {
+      navigate("/user/login");
+    }
   };
 
   const handleBidSubmit = async (e) => {
@@ -45,7 +54,7 @@ const UserDashboard = () => {
 
   useEffect(() => {
     const fetchTenders = async () => {
-      const tenders = await getTenders();
+      const tenders = await getAvailableTenders();
       setTenders(tenders);
     };
     fetchTenders();

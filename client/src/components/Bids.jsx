@@ -1,6 +1,6 @@
 // src/components/BidsManagement.js
 import { useState, useEffect } from "react";
-import { getBidsByTenderId } from "../api/tenderService";
+import { getAllBids, getBidsByTenderId } from "../api/tenderService";
 import { formateDate } from "../functions/formatDate";
 
 const Bids = ({ tenderId }) => {
@@ -8,7 +8,9 @@ const Bids = ({ tenderId }) => {
 
   useEffect(() => {
     const fetchBids = async () => {
-      const bidsData = await getBidsByTenderId(tenderId);
+      const bidsData = tenderId
+        ? await getBidsByTenderId(tenderId)
+        : await getAllBids();
       setBids(bidsData);
     };
     fetchBids();
@@ -24,6 +26,7 @@ const Bids = ({ tenderId }) => {
               <th>Company Name</th>
               <th>Bid Time</th>
               <th>Bid Cost</th>
+              <th>User Name</th>
               <th>Flag (Last 5 mins)</th>
             </tr>
           </thead>
@@ -33,6 +36,7 @@ const Bids = ({ tenderId }) => {
                 <td>{bid.companyName}</td>
                 <td>{formateDate(bid.bidTime)}</td>
                 <td>{bid.bidCost}</td>
+                <td>{bid?.user?.name}</td>
                 <td>{bid.placedInLastFiveMinutes ? "Yes" : "No"}</td>
               </tr>
             ))}

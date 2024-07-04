@@ -15,7 +15,10 @@ const TenderList = ({ tenders, setTenders }) => {
 
   return (
     <div>
-      <h2 className="mb-2 text-2xl font-bold">Available Tenders</h2>
+      <div className="flex flex-row items-center justify-between">
+        <h2 className="mb-2 text-2xl font-bold">All Previous Tenders</h2>
+        <Link to="/admin/bids" className="text-blue-700 underline">View all Bids</Link>
+      </div>
       <div className="w-full p-4 text-sm bg-white rounded-lg shadow-md border divide-y overflow-auto">
         <table className="w-full table-auto *:text-left divide-y space-y-2">
           <thead>
@@ -35,7 +38,12 @@ const TenderList = ({ tenders, setTenders }) => {
                   <div className="w-24 truncate">{tender?._id}</div>{" "}
                 </td>
                 <td>
-                  <Link to={`/admin/bids/${tender._id}`} className="text-blue underline" >{tender.name}</Link>
+                  <Link
+                    to={`/admin/bids/${tender._id}`}
+                    className="text-blue-700 underline"
+                  >
+                    {tender.name}
+                  </Link>
                 </td>
                 <td>{tender.description}</td>
                 <td>{formateDate(tender.startTime)}</td>

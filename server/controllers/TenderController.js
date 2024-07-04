@@ -1,12 +1,25 @@
 const { io } = require("../app");
 const TenderModel = require("../models/Tender");
 
-
 class TenderController {
   // GET ALL TENDERS
   static getTenders = async (req, res) => {
     try {
+      // io.emit("message", "helo");
       const tenders = await TenderModel.find();
+      res.status(200).json(tenders);
+    } catch (error) {
+      console.log(error.message);
+      res
+        .status(400)
+        .json({ status: "failed", message: error.message });
+    }
+  };
+
+  // GET ALL TENDERS
+  static getAvailableTenders = async (req, res) => {
+    try {
+      const tenders = await TenderModel.find({ endTime: { $gt: new Date() } });
       res.status(200).json(tenders);
     } catch (error) {
       console.log(error.message);

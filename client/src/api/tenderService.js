@@ -6,7 +6,12 @@ export const createTender = async (tenderData) => {
 };
 
 export const getTenders = async () => {
-  const response = await Axios.get('/tenders');
+  const response = await Axios.get('/getTenders');
+  return response.data;
+};
+
+export const getAvailableTenders = async () => {
+  const response = await Axios.get('/getAvailableTenders');
   return response.data;
 };
 
@@ -15,7 +20,17 @@ export const createBid = async (bidData) => {
   return response.data;
 };
 
+export const getAllBids = async () => {
+  const response = await Axios.get(`/bids`);
+  return response.data;
+};
+
 export const getBidsByTenderId = async (tenderId) => {
   const response = await Axios.get(`/bids/${tenderId}`);
+  return response.data;
+};
+
+export const getLowestBidsByTenderId = async (tenderId) => {
+  const response = await Axios.get(`/lowestBid/${tenderId}`);
   return response.data;
 };

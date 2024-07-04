@@ -1,19 +1,28 @@
-import { useState } from "react";
-import { createBid, getBidsByTenderId } from "../api/tenderService";
+import { useState, useEffect, useContext } from "react";
+import { createBid, getLowestBidsByTenderId } from "../api/tenderService.js";
+import { AuthContext } from "../api/authContext.jsx";
+import { useAlert } from "react-alert";
 
 function NewBid({ tender }) {
+  const alert = useAlert();
+  const { user } = useContext(AuthContext);
   const [bidData, setBidData] = useState({
     companyName: "",
     bidCost: "",
     tenderId: "",
   });
+  const [lowestBid, setLowestBid] = useState();
+
+  const fetchLowestBid = async () => {
+    const lowestBidData = await getLowestBidsByTenderId(tender._id);
+    setLowestBid(lowestBidData.bidCost);
+  };
+  useEffect(() => {
+    fetchLowestBid();
+  }, [tender._id]);
   const handleBidChange = (e) => {
     const { name, value } = e.target;
     setBidData({ ...bidData, [name]: value });
-  };
-
-  const fetchBids = async () => {
-    await getBidsByTenderId(tender._id);
   };
 
   const handleBidSubmit = async (e) => {
@@ -22,10 +31,13 @@ function NewBid({ tender }) {
       await createBid({
         ...bidData,
         tenderId: tender._id,
+        userId: user._id,
       });
-      fetchBids();
+      alert.success("Quotation Submitted Successfully!");
+      fetchLowestBid();
     } catch (error) {
-      console.error("Error creating bid", error);
+      console.error("Error creating bid", error.message);
+      alert.error("Error creating bid", error.message);
     }
   };
   return (
@@ -49,6 +61,7 @@ function NewBid({ tender }) {
           Submit Bid
         </button>
       </form>
+      <h1 className="pt-2 font-semibold">Lowest Bid - {lowestBid}</h1>
     </div>
   );
 }
